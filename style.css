@@ -241,15 +241,12 @@ a:visited {
     border: 0px;
 }
 
-.btn-delete-workout{
-  color: white;
-    border-radius: 3px;
-    background-color: indianred;
-    font-weight: 600;
-    border: 0px;
-}
 
 .btn-delete-workout{
+  color: white;
+  border: 0px;
+  font-weight: 600;
+  background-color: indianred;
   grid-column-start: 4;
   grid-row-start: 1;
   border-radius: 50%;
