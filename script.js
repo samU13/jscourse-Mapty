@@ -76,6 +76,9 @@ class App {
     form.addEventListener("submit", this._newWorkout.bind(this)); // bind para que el this sea el de la clase
     inputType.addEventListener("change", this._toggleElevationField.bind(this));
     containerWorkouts.addEventListener("click", this._moveToPopup.bind(this));
+    document
+      .querySelector(".btn-delete-all")
+      .addEventListener("click", this._deleteAllWorkouts.bind(this));
   }
 
   _getPosition() {
@@ -116,19 +119,26 @@ class App {
   _hideForm() {
     // Empty inputs
     inputDistance.value =
-    inputDuration.value =
-    inputCadence.value =
-    inputElevation.value =
-      "";
+      inputDuration.value =
+      inputCadence.value =
+      inputElevation.value =
+        "";
     // Hide form
     form.style.display = "none";
     form.classList.add("hidden");
-    setTimeout(() => (form.style.display = "grid"), 1000); 
+    setTimeout(() => (form.style.display = "grid"), 1000);
   }
 
   _toggleElevationField() {
     inputElevation.closest(".form__row").classList.toggle("form__row--hidden");
     inputCadence.closest(".form__row").classList.toggle("form__row--hidden");
+  }
+
+  // Delete all workouts
+  _deleteAllWorkouts() {
+    if (confirm("¿Seguro que quieres borrar todos los entrenamientos?")) {
+      this.reset();
+    }
   }
 
   _newWorkout(e) {
@@ -176,7 +186,6 @@ class App {
 
     // Add new object to workout array
     this.#workouts.push(workout);
-  
 
     // Render workout on map as marker
     this._renderWorkoutMarker(workout);
@@ -224,6 +233,7 @@ class App {
             <span class="workout__value">${workout.duration}</span>
             <span class="workout__unit">min</span>
           </div>
+          <button class="btn-delete-workout">X</button>
           `;
 
     if (workout.type === "running") {
@@ -255,6 +265,20 @@ class App {
         </li>`;
     }
     form.insertAdjacentHTML("afterend", html);
+    document
+      .querySelector(".btn-delete-workout")
+      .addEventListener("click", this._deleteWorkout.bind(this, workout.id));
+  }
+
+  _deleteWorkout(id) {
+    const confirmed = confirm(
+      "¿Estás seguro de que deseas eliminar este entrenamiento?"
+    );
+    if (!confirmed) return;
+    this.#workouts = this.#workouts.filter((workout) => workout.id !== id);
+    // Update UI
+    this._setLocalStorage();
+    location.reload();
   }
 
   _moveToPopup(e) {
